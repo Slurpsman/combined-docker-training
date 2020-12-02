@@ -1,0 +1,6 @@
+[submodule "mkdocs/docker-training"]
+	path = mkdocs/docker-training
+	url = git@github.com:jamct/docker-training.git
+[submodule "mkdocs/kubernetes-training"]
+	path = mkdocs/kubernetes-training
+	url = git@github.com:jamct/kubernetes-training.git
