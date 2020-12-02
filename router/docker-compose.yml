@@ -1,0 +1,49 @@
+version: "3.8"
+services:
+  traefik:
+    image: traefik:v2.2
+    command: --providers.docker
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - ./traefik/static.yml:/etc/traefik/traefik.yml
+      - ./traefik/dynamic.yml:/etc/traefik/dynamic/dynamic.yml
+      - ./traefik/acme.json:/etc/traefik/acme/acme.json
+    networks:
+      - router
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+# [...] Ergänzen Sie ggf. Watchtower, Portainer und andere Tools nach Belieben...
+  portainer:
+    image: portainer/portainer
+    ports:
+     - 9000:9000
+    restart: always
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+     - ./portainer:/data
+    networks:
+      - router
+    labels:
+      - "traefik.http.routers.conts.rule=Host(`conts.demo-1.liefer.it`)"
+      - "traefik.http.routers.conts.tls.certResolver=default"
+      - "traefik.http.routers.conts.tls=true"
+      - "com.centurylinklabs.watchtower.enable=true"
+
+
+  watchtower:
+    image: containrrr/watchtower
+    command: --cleanup --label-enable
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/.docker/config.json:/config.json
+
+networks:
+  router:
+    external: 
+      name: router-network
