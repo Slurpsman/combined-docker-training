@@ -32,7 +32,7 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     networks:
-      - default
+      - router
 #    log-driver: "json-file"
 #      options:
 #        max-file: 5
@@ -65,7 +65,6 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - router
-      - default
       
 networks:
   router:
